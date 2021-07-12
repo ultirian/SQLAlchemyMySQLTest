@@ -4,7 +4,7 @@ import secrets
 import string
 import pyinputplus as pyin
 from user import User
-from base import Session, engine, Base, create_session
+from base import engine, Base, create_session
 from password_strength import PasswordPolicy
 from password_strength import PasswordStats
 
@@ -13,17 +13,20 @@ from password_strength import PasswordStats
 def add_user():
     # Call create_session() func to local object
     session = create_session()
-    # Set user terms
-    username_l = user_setter()
-    firstname_l = firstname_setter()
-    lastname_l = lastname_setter()
-    password_l = password_setter()
-    pin_o = generate_pin()
+    # # Set user terms
     usertype_l, is_admin_l, is_lecturer_l, is_student_l = usertype_setter()
     # Add a User
-    new_user = User(username=username_l, firstname=firstname_l.capitalize(), lastname=lastname_l.capitalize(),
-                    password=password_l, usertype=usertype_l, pin=pin_o, is_admin=is_admin_l,
-                    is_lecturer=is_lecturer_l, is_student=is_student_l)
+    new_user = User(
+        username=user_setter(),
+        firstname=firstname_setter().capitalize(),
+        lastname=lastname_setter().capitalize(),
+        password=password_setter(),
+        usertype=usertype_l,
+        pin=generate_pin(),
+        is_admin=is_admin_l,
+        is_lecturer=is_lecturer_l,
+        is_student=is_student_l,
+    )
 
     session.add(new_user)
     session.commit()
@@ -32,7 +35,7 @@ def add_user():
 
 def generate_pin():
     number = string.digits
-    _pin = ''.join(secrets.choice(number) for i in range(4))
+    _pin = "".join(secrets.choice(number) for i in range(4))
     print(f"Pin: {_pin}")
     return _pin
 
@@ -84,7 +87,9 @@ def password_setter():
 
 
 def usertype_setter():
-    usertype_l = pyin.inputChoice(['1', '2', '3'], prompt="Press 1 for Admin | 2 For Lecturer | 3 For Student: ")
+    usertype_l = pyin.inputChoice(
+        ["1", "2", "3"], prompt="Press 1 for Admin | 2 For Lecturer | 3 For Student: "
+    )
 
     is_admin_l = False
     is_lecturer_l = False
@@ -121,11 +126,11 @@ def query_user():
 
     if our_user:
         print("Username Found")
-        print('\nOur User:')
+        print("\nOur User:")
         print(our_user)
     else:
         print("Username Not Found")
-        print('\nOur User:')
+        print("\nOur User:")
         print(our_user)
 
     session.close()
